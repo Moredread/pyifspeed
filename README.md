@@ -6,7 +6,7 @@ Not functional yet
 License
 -------
 
-pyifacespeed
+pyifspeed
 
 Copyright (C) 2016  André-Patrick Bubel
 
