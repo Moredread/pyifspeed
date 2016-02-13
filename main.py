@@ -1,10 +1,11 @@
 import time
+import serial
 
 STAT_FOLDER = "/sys/class/net/{}/statistics"
 RX_BYTES = STAT_FOLDER + "/rx_bytes"
 TX_BYTES = STAT_FOLDER + "/tx_bytes"
 
-DEV = "enp0s3"
+DEV = "eth0"
 
 
 def get_bytes(dev):
@@ -31,6 +32,8 @@ def get_tx_bytes(dev):
 
 
 def main():
+    s = serial.Serial("/dev/ttyACM0", 9600)
+
     old_rx, old_tx = get_bytes(DEV)
     t = 5
 
@@ -39,8 +42,16 @@ def main():
 
         rx, tx = get_bytes(DEV)
 
-        print(int(bytes_to_mbit(rx - old_rx) / t))
-        print(int(bytes_to_mbit(tx - old_tx) / t))
+        tx_mbit = int(bytes_to_mbit(rx - old_rx) / t)
+        rx_mbit = int(bytes_to_mbit(tx - old_tx) / t)
+
+        print(tx_mbit)
+        print(rx_mbit)
+
+        s.write(str(tx_mbit))
+        s.write("\n")
+        s.write(str(rx_mbit))
+        s.write("\n")
 
         old_rx, old_tx = rx, tx
 
